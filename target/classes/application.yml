@@ -3,9 +3,9 @@ spring:
     name: roadtech-backend
 
   datasource:
-    url: jdbc:mysql://mysql-production-1700.up.railway.app:3306/roadtech?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: root
-    password: TjsNFTKZjDNGPeDcrGfaZpHVsHZZOnmZ
+	url: ${DATABASE_URL}
+	username: ${DB_USERNAME}
+	password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       maximum-pool-size: 10
@@ -27,10 +27,11 @@ spring:
       write-dates-as-timestamps: false
     default-property-inclusion: non_null
 
-server:
-  port: 8085
-  servlet:
-    context-path: /api
+	server:
+	  port: ${PORT:8080}
+	  servlet:
+	    context-path: /api
+
 
 # JWT Configuration
 jwt:
