@@ -3,23 +3,26 @@ spring:
     name: roadtech-backend
 
   datasource:
-    url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}?useSSL=false&allowPublicKeyRetrieval=true
-    username: ${MYSQLUSER}
-    password: ${MYSQLPASSWORD}
+    url: jdbc:mysql://${MYSQLHOST:localhost}:${MYSQLPORT:3306}/${MYSQLDATABASE:roadtech}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: ${MYSQLUSER:roadtech}
+    password: ${MYSQLPASSWORD:roadtech}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
+      pool-name: HikariPool
       maximum-pool-size: 10
-      minimum-idle: 5
+      minimum-idle: 3
       idle-timeout: 300000
+      max-lifetime: 1800000
       connection-timeout: 20000
 
   jpa:
+    open-in-view: false
     hibernate:
       ddl-auto: update
     show-sql: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
+        dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
 
   jackson:
@@ -33,10 +36,11 @@ server:
     context-path: /api
 
 jwt:
-  secret: ${JWT_SECRET}
+  secret: ${JWT_SECRET:roadtech_default_secret}
   access-token-expiration: 900000
   refresh-token-expiration: 604800000
 
 logging:
   level:
     root: INFO
+    com.zaxxer.hikari: INFO
