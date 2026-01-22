@@ -3,8 +3,8 @@ spring:
     name: roadtech-backend
 
   datasource:
-    url: jdbc:mysql://${MYSQLHOST:localhost}:${MYSQLPORT:3306}/${MYSQLDATABASE:roadtech}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: ${MYSQLUSER:roadtech}
+    url: jdbc:mysql://${MYSQLHOST:localhost}:${MYSQLPORT:3306}/${MYSQLDATABASE:roadtechdb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: ${MYSQLUSER:root}
     password: ${MYSQLPASSWORD:roadtech}
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
@@ -13,7 +13,7 @@ spring:
       minimum-idle: 3
       idle-timeout: 300000
       max-lifetime: 1800000
-      connection-timeout: 20000
+      connection-timeout: 30000
 
   jpa:
     open-in-view: false
