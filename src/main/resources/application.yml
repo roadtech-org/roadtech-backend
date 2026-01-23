@@ -3,9 +3,9 @@ spring:
     name: roadtech-backend
 
   datasource:
-    url: jdbc:mysql://${MYSQLHOST:localhost}:${MYSQLPORT:3306}/${MYSQLDATABASE:roadtechdb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: ${MYSQLUSER:root}
-    password: ${MYSQLPASSWORD:roadtech}
+    url: jdbc:mysql://mysql.railway.internal::3306/roadtechdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: QrygyLeLSMCNTvKTKiLNTQSRRABzTVlw
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       pool-name: HikariPool
