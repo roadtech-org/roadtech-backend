@@ -3,9 +3,9 @@ spring:
     name: roadtech-backend
 
   datasource:
-    url: jdbc:mysql://${MYSQLHOST:localhost}:${MYSQLPORT:3306}/${MYSQLDATABASE:roadtechdb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: ${MYSQLUSER:root}
-    password: ${MYSQLPASSWORD:roadtech}
+    url: jdbc:mysql://localhost:3306/roadtechdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       pool-name: HikariPool
@@ -31,12 +31,12 @@ spring:
     default-property-inclusion: non_null
 
 server:
-  port: ${PORT:8080}
+  port: 8085
   servlet:
     context-path: /api
 
 jwt:
-  secret: ${JWT_SECRET:roadtech_default_secret}
+  secret: ${JWT_SECRET:your-super-secret-key-for-jwt-token-generation-minimum-256-bits-long}
   access-token-expiration: 900000
   refresh-token-expiration: 604800000
 
