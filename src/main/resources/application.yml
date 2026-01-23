@@ -3,7 +3,7 @@ spring:
     name: roadtech-backend
 
   datasource:
-    url: jdbc:mysql://mysql.railway.internal::3306/roadtechdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: jdbc:mysql://mysql.railway.internal:3306/roadtechdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
     password: QrygyLeLSMCNTvKTKiLNTQSRRABzTVlw
     driver-class-name: com.mysql.cj.jdbc.Driver
