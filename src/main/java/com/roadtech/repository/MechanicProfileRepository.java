@@ -50,4 +50,15 @@ public interface MechanicProfileRepository extends JpaRepository<MechanicProfile
         AND u.isActive = true
         """)
     List<MechanicProfile> findAllAvailableWithUser();
+    
+    @Query("""
+    	    SELECT COUNT(mp)
+    	    FROM MechanicProfile mp
+    	    JOIN mp.user u
+    	    WHERE mp.isAvailable = true
+    	      AND mp.isVerified = true
+    	      AND u.isActive = true
+    	""")
+    	long countAvailableMechanics();
+
 }

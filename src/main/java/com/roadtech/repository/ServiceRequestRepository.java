@@ -17,6 +17,12 @@ import java.util.Optional;
 @Repository
 public interface ServiceRequestRepository extends JpaRepository<ServiceRequest, Long> {
 
+	long countByStatusAndCompletedAtBetween(
+	        RequestStatus status,
+	        LocalDateTime startOfDay,
+	        LocalDateTime endOfDay
+	);
+
     List<ServiceRequest> findByUserIdOrderByCreatedAtDesc(Long userId);
 
     List<ServiceRequest> findByMechanicIdOrderByCreatedAtDesc(Long mechanicId);

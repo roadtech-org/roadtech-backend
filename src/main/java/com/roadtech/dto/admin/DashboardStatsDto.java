@@ -18,4 +18,6 @@ public class DashboardStatsDto {
     private Long totalRequests;
     private Long pendingRequests;
     private Long activeRequests;
+    private Long completedToday;
+    private Long availableMechanics;
 }
