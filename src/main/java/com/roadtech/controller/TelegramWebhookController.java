@@ -2,7 +2,11 @@ package com.roadtech.controller;
 
 import java.util.Map;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.roadtech.entity.User;
 import com.roadtech.repository.UserRepository;
@@ -19,19 +23,20 @@ public class TelegramWebhookController {
     private final UserRepository userRepository;
 
     @PostMapping("/webhook")
-    public void onUpdate(@RequestBody Map<String, Object> payload) {
+    public ResponseEntity<String> onUpdate(@RequestBody Map<String, Object> payload) {
+
+        log.info("Telegram update received: {}", payload);
 
         Map<?, ?> message = (Map<?, ?>) payload.get("message");
-        if (message == null) return;
+        if (message == null) return ResponseEntity.ok("no message");
 
         Map<?, ?> chat = (Map<?, ?>) message.get("chat");
         String text = (String) message.get("text");
 
-        if (chat == null || text == null) return;
+        if (chat == null || text == null) return ResponseEntity.ok("invalid");
 
         Long chatId = ((Number) chat.get("id")).longValue();
 
-        // Expect: /link mechanic@email.com
         if (text.startsWith("/link")) {
 
             String email = text.replace("/link", "").trim();
@@ -39,16 +44,19 @@ public class TelegramWebhookController {
             userRepository.findByEmail(email).ifPresentOrElse(user -> {
 
                 if (user.getRole() != User.UserRole.MECHANIC) {
-                    log.warn("User {} tried Telegram link but is not MECHANIC", email);
+                    log.warn("Telegram link rejected: {} not MECHANIC", email);
                     return;
                 }
 
                 user.setTelegramChatId(chatId);
                 userRepository.save(user);
 
-                log.info("Telegram linked: userId={}, chatId={}", user.getId(), chatId);
+                log.info("Telegram linked successfully: userId={}, chatId={}",
+                        user.getId(), chatId);
 
             }, () -> log.warn("Telegram link failed: email not found {}", email));
         }
+
+        return ResponseEntity.ok("ok");
     }
 }

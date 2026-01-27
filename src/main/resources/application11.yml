@@ -46,6 +46,3 @@ logging:
   level:
     root: INFO
     com.zaxxer.hikari: INFO
-telegram:
-  bot:
-    token: 8031812249:AAHM-F2FZbSDxMOCWak1L0TfaG--aHvT7FA
