@@ -11,9 +11,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DashboardStatsDto {
-    private Long totalUsers;
+	private Long totalUsers;
+    private Long totalCustomers;
     private Long totalMechanics;
-    private Long totalPartsProviders;
+    private Long totalProviders;
     private Long totalRequests;
     private Long pendingRequests;
     private Long activeRequests;

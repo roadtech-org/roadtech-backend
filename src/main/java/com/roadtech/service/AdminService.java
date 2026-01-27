@@ -2,6 +2,7 @@ package com.roadtech.service;
 
 import com.roadtech.dto.admin.*;
 import com.roadtech.entity.*;
+import com.roadtech.entity.User.UserRole;
 import com.roadtech.exception.ResourceNotFoundException;
 import com.roadtech.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class AdminService {
     @Transactional(readOnly = true)
     public DashboardStatsDto getDashboardStats() {
         long totalUsers = userRepository.count();
+        long totalCustomers = userRepository.countByRole(UserRole.USER);
         long totalMechanics = mechanicProfileRepository.count();
         long totalProviders = partsProviderRepository.count();
         long totalRequests = serviceRequestRepository.count();
@@ -35,11 +37,12 @@ public class AdminService {
         long activeRequests = serviceRequestRepository.countByStatusIn(
             Arrays.asList(ServiceRequest.RequestStatus.ACCEPTED, ServiceRequest.RequestStatus.IN_PROGRESS)
         );
-
+      
         return DashboardStatsDto.builder()
                 .totalUsers(totalUsers)
+                .totalCustomers(totalCustomers)
                 .totalMechanics(totalMechanics)
-                .totalPartsProviders(totalProviders)
+                .totalProviders(totalProviders)
                 .totalRequests(totalRequests)
                 .pendingRequests(pendingRequests)
                 .activeRequests(activeRequests)
