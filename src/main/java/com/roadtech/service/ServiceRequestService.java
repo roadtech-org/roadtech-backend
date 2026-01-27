@@ -7,12 +7,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.roadtech.dto.request.CreateServiceRequestDto;
 import com.roadtech.dto.request.ServiceRequestDto;
+import com.roadtech.entity.MechanicProfile;
 import com.roadtech.entity.ServiceRequest;
 import com.roadtech.entity.ServiceRequest.RequestStatus;
 import com.roadtech.entity.User;
 import com.roadtech.exception.BadRequestException;
 import com.roadtech.exception.ForbiddenException;
 import com.roadtech.exception.ResourceNotFoundException;
+import com.roadtech.repository.MechanicProfileRepository;
 import com.roadtech.repository.ServiceRequestRepository;
 import com.roadtech.repository.UserRepository;
 
@@ -27,9 +29,40 @@ public class ServiceRequestService {
     private final ServiceRequestRepository serviceRequestRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final MechanicProfileRepository mechanicRepo;
+    private final TelegramNotificationService telegramService;
 
+//    @Transactional
+//    public ServiceRequestDto createRequest(Long userId, CreateServiceRequestDto dto) {
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new ResourceNotFoundException("User", userId));
+//
+//        // Check if user already has an active request
+//        serviceRequestRepository.findActiveRequestByUserId(userId)
+//                .ifPresent(r -> {
+//                    throw new BadRequestException("You already have an active service request");
+//                });
+//
+//        ServiceRequest request = ServiceRequest.builder()
+//                .user(user)
+//                .issueType(dto.getIssueType())
+//                .description(dto.getDescription())
+//                .latitude(dto.getLatitude())
+//                .longitude(dto.getLongitude())
+//                .address(dto.getAddress())
+//                .status(RequestStatus.PENDING)
+//                .build();
+//
+//        request = serviceRequestRepository.save(request);
+//
+//        // Notify available mechanics about new request
+//        notificationService.notifyNewRequest(request);
+//
+//        return ServiceRequestDto.fromEntity(request);
+//    }
     @Transactional
     public ServiceRequestDto createRequest(Long userId, CreateServiceRequestDto dto) {
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User", userId));
 
@@ -51,11 +84,42 @@ public class ServiceRequestService {
 
         request = serviceRequestRepository.save(request);
 
-        // Notify available mechanics about new request
+        // 🔔 Existing notification (WebSocket / DB / etc.)
         notificationService.notifyNewRequest(request);
+
+        // 📲 NEW: Telegram notification to mechanics
+        List<MechanicProfile> mechanics =
+                mechanicRepo.findAllAvailableWithUser();
+
+        for (MechanicProfile mechanic : mechanics) {
+            User mechanicUser = mechanic.getUser();
+
+            if (mechanicUser.getTelegramChatId() != null) {
+
+                String msg = """
+                🚨 New Service Request
+
+                Issue: %s
+                Location: %s
+                Request ID: %d
+
+                Open RoadTech app to accept
+                """.formatted(
+                    request.getIssueType(),
+                    request.getAddress(),
+                    request.getId()
+                );
+
+                telegramService.sendMessage(
+                        mechanicUser.getTelegramChatId(),
+                        msg
+                );
+            }
+        }
 
         return ServiceRequestDto.fromEntity(request);
     }
+
 
     @Transactional(readOnly = true)
     public ServiceRequestDto getRequestById(Long requestId, Long userId) {
@@ -110,4 +174,5 @@ public class ServiceRequestService {
 
         return ServiceRequestDto.fromEntity(request);
     }
+    
 }

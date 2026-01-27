@@ -1,5 +1,11 @@
 package com.roadtech.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.roadtech.dto.mechanic.AvailabilityDto;
 import com.roadtech.dto.mechanic.LocationUpdateDto;
 import com.roadtech.dto.mechanic.MechanicProfileDto;
@@ -12,14 +18,12 @@ import com.roadtech.exception.BadRequestException;
 import com.roadtech.exception.ForbiddenException;
 import com.roadtech.exception.ResourceNotFoundException;
 import com.roadtech.repository.MechanicProfileRepository;
+import com.roadtech.repository.PartRepository;
+import com.roadtech.repository.PartsProviderRepository;
 import com.roadtech.repository.ServiceRequestRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +34,8 @@ public class MechanicService {
     private final ServiceRequestRepository serviceRequestRepository;
     private final NotificationService notificationService;
     private final LocationService locationService;
+    private final PartRepository partRepository;
+    private final PartsProviderRepository partsProviderRepository;
 
     @Transactional(readOnly = true)
     public MechanicProfileDto getProfile(Long userId) {
@@ -227,4 +233,5 @@ public class MechanicService {
             throw new ForbiddenException("You are not assigned to this request");
         }
     }
+    
 }
