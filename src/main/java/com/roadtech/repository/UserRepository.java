@@ -2,6 +2,8 @@
 package com.roadtech.repository;
 
 import com.roadtech.entity.User;
+import com.roadtech.entity.User.UserRole;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,7 +21,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByEmail(String email);
 
     Optional<User> findByEmailAndIsActiveTrue(String email);
-
+    
+    long countByRole(UserRole role);
     // Additional methods for admin panel
     Page<User> findByRole(User.UserRole role, Pageable pageable);
 

@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: roadtech-backend
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/roadtech?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      pool-name: HikariPool
+      maximum-pool-size: 10
+      minimum-idle: 3
+      idle-timeout: 300000
+      max-lifetime: 1800000
+      connection-timeout: 30000
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    default-property-inclusion: non_null
+
+server:
+ port: ${PORT:8085}
+ address: 0.0.0.0  # Critical for Railway!
+ servlet:
+  context-path: /api
+ forward-headers-strategy: framework  # Important for proxy
+
+jwt:
+  secret: 7K9mP2qR5tU8xA1bD4eF7hJ0kM3nQ6sV9yB2cE5gI8lN1oR4tW7zA0dG3jM6pS9v
+  access-token-expiration: 900000
+  refresh-token-expiration: 604800000
+
+logging:
+  level:
+    root: INFO
+    com.zaxxer.hikari: INFO
+telegram:
+  bot:
+    token: 8031812249:AAHM-F2FZbSDxMOCWak1L0TfaG--aHvT7FA
