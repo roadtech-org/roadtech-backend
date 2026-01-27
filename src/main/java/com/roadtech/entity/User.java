@@ -67,6 +67,6 @@ public class User {
     private MechanicProfile mechanicProfile;
 
     public enum UserRole {
-        USER, MECHANIC, ADMIN
+        USER, MECHANIC, ADMIN, PARTS_PROVIDER
     }
 }

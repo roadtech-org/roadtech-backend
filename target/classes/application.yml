@@ -3,32 +3,23 @@ spring:
     name: roadtech-backend
 
   datasource:
-<<<<<<< Updated upstream
-    url: jdbc:mysql://localhost:3306/roadtechdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/roadtech?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
     password: root
-=======
-    url: jdbc:mysql://${MYSQLHOST:localhost}:${MYSQLPORT:3306}/${MYSQLDATABASE:roadtechdb}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: ${MYSQLUSER:root}
-    password: ${MYSQLPASSWORD:roadtech}
->>>>>>> Stashed changes
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
-      pool-name: HikariPool
       maximum-pool-size: 10
-      minimum-idle: 3
+      minimum-idle: 5
       idle-timeout: 300000
-      max-lifetime: 1800000
-      connection-timeout: 30000
+      connection-timeout: 20000
 
   jpa:
-    open-in-view: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
 
   jackson:
@@ -41,16 +32,19 @@ server:
   servlet:
     context-path: /api
 
+# JWT Configuration
 jwt:
-<<<<<<< Updated upstream
-  secret: ${JWT_SECRET:your-super-secret-key-for-jwt-token-generation-minimum-256-bits-long}
-=======
-  secret: ${JWT_SECRET:roadtech_default_secret}
->>>>>>> Stashed changes
-  access-token-expiration: 900000
-  refresh-token-expiration: 604800000
+  secret: ${JWT_SECRET:Qm9J2Gq4cP6dF5Jw8L2KX7nZr9s3mA1R0tEoU5xVHyI=}  # Default secret, should be overridden in production
+  access-token-expiration: 900000      # 15 minutes in milliseconds
+  refresh-token-expiration: 604800000  # 7 days in milliseconds
 
+# Logging
 logging:
   level:
-    root: INFO
-    com.zaxxer.hikari: INFO
+    com.roadtech: DEBUG
+    org.springframework.security: INFO
+    org.hibernate.SQL: DEBUG
+
+telegram:
+  bot-token: 8031812249:AAHM-F2FZbSDxMOCWak1L0TfaG--aHvT7FA
+  chat-id: -5266194659

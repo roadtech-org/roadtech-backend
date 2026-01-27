@@ -1,12 +1,16 @@
+// Update ServiceRequestRepository.java with these additional methods:
 package com.roadtech.repository;
 
 import com.roadtech.entity.ServiceRequest;
 import com.roadtech.entity.ServiceRequest.RequestStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,4 +80,15 @@ public interface ServiceRequestRepository extends JpaRepository<ServiceRequest, 
     Optional<ServiceRequest> findByIdWithDetails(@Param("id") Long id);
 
     long countByMechanicIdAndStatus(Long mechanicId, RequestStatus status);
+
+    // Additional methods for admin analytics
+    Page<ServiceRequest> findByStatus(RequestStatus status, Pageable pageable);
+
+    long countByStatus(RequestStatus status);
+
+    long countByStatusIn(List<RequestStatus> statuses);
+
+    long countByCreatedAtAfter(LocalDateTime date);
+
+    long countByStatusAndCreatedAtAfter(RequestStatus status, LocalDateTime date);
 }

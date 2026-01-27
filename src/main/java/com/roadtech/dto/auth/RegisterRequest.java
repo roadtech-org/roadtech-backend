@@ -34,4 +34,13 @@ public class RegisterRequest {
 
     // Only for mechanics
     private List<String> specializations;
+
+ // PARTS PROVIDER
+    private String shopName;
+    private String address;
+    private Double latitude;
+    private Double longitude;
+    private String openingTime;
+    private String closingTime;
+	
 }

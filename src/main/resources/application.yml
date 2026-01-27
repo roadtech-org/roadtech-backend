@@ -3,26 +3,23 @@ spring:
     name: roadtech-backend
 
   datasource:
-    url: jdbc:mysql://mysql.railway.internal:3306/roadtechdb?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/roadtech?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
-    password: QrygyLeLSMCNTvKTKiLNTQSRRABzTVlw
+    password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
-      pool-name: HikariPool
       maximum-pool-size: 10
-      minimum-idle: 3
+      minimum-idle: 5
       idle-timeout: 300000
-      max-lifetime: 1800000
-      connection-timeout: 30000
+      connection-timeout: 20000
 
   jpa:
-    open-in-view: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: false
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+        dialect: org.hibernate.dialect.MySQLDialect
         format_sql: true
 
   jackson:
@@ -31,18 +28,23 @@ spring:
     default-property-inclusion: non_null
 
 server:
- port: ${PORT:8085}
- address: 0.0.0.0  # Critical for Railway!
- servlet:
-  context-path: /api
- forward-headers-strategy: framework  # Important for proxy
+  port: 8085
+  servlet:
+    context-path: /api
 
+# JWT Configuration
 jwt:
-  secret: ${JWT_SECRET:your-super-secret-key-for-jwt-token-generation-minimum-256-bits-long}
-  access-token-expiration: 900000
-  refresh-token-expiration: 604800000
+  secret: ${JWT_SECRET:Qm9J2Gq4cP6dF5Jw8L2KX7nZr9s3mA1R0tEoU5xVHyI=}  # Default secret, should be overridden in production
+  access-token-expiration: 900000      # 15 minutes in milliseconds
+  refresh-token-expiration: 604800000  # 7 days in milliseconds
 
+# Logging
 logging:
   level:
-    root: INFO
-    com.zaxxer.hikari: INFO
+    com.roadtech: DEBUG
+    org.springframework.security: INFO
+    org.hibernate.SQL: DEBUG
+
+telegram:
+  bot-token: 8031812249:AAHM-F2FZbSDxMOCWak1L0TfaG--aHvT7FA
+  chat-id: -5266194659

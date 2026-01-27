@@ -7,16 +7,15 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
-@Table(name = "mechanic_profiles")
+@Table(name = "parts_providers")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MechanicProfile {
+public class PartsProvider {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,34 +25,42 @@ public class MechanicProfile {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    @Column(columnDefinition = "CLOB")
-    @Convert(converter = StringListConverter.class)
-    private List<String> specializations;
+    @Column(name = "shop_name", nullable = false, length = 200)
+    private String shopName;
 
-    @Column(name = "is_available")
-    @Builder.Default
-    private Boolean isAvailable = false;
+    @Column(nullable = false, length = 500)
+    private String address;
+
+    @Column(nullable = false, precision = 10, scale = 8)
+    private BigDecimal latitude;
+
+    @Column(nullable = false, precision = 11, scale = 8)
+    private BigDecimal longitude;
 
     @Column(name = "is_verified")
     @Builder.Default
     private Boolean isVerified = false;
 
-    @Column(name = "current_latitude", precision = 10, scale = 8)
-    private BigDecimal currentLatitude;
-
-    @Column(name = "current_longitude", precision = 11, scale = 8)
-    private BigDecimal currentLongitude;
+    @Column(name = "is_open")
+    @Builder.Default
+    private Boolean isOpen = false;
 
     @Column(precision = 3, scale = 2)
     @Builder.Default
     private BigDecimal rating = BigDecimal.ZERO;
 
-    @Column(name = "total_jobs")
+    @Column(name = "total_orders")
     @Builder.Default
-    private Integer totalJobs = 0;
+    private Integer totalOrders = 0;
 
-    @Column(name = "location_updated_at")
-    private LocalDateTime locationUpdatedAt;
+    @Column(name = "phone", length = 20)
+    private String phone;
+
+    @Column(name = "opening_time")
+    private String openingTime;
+
+    @Column(name = "closing_time")
+    private String closingTime;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

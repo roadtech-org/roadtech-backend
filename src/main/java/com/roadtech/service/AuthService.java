@@ -1,30 +1,35 @@
 package com.roadtech.service;
 
-import com.roadtech.dto.UserDto;
-import com.roadtech.dto.auth.AuthResponse;
-import com.roadtech.dto.auth.LoginRequest;
-import com.roadtech.dto.auth.RegisterRequest;
-import com.roadtech.entity.MechanicProfile;
-import com.roadtech.entity.RefreshToken;
-import com.roadtech.entity.User;
-import com.roadtech.entity.User.UserRole;
-import com.roadtech.exception.BadRequestException;
-import com.roadtech.exception.UnauthorizedException;
-import com.roadtech.repository.MechanicProfileRepository;
-import com.roadtech.repository.RefreshTokenRepository;
-import com.roadtech.repository.UserRepository;
-import com.roadtech.security.CustomUserDetails;
-import com.roadtech.security.JwtService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
+import com.roadtech.dto.UserDto;
+import com.roadtech.dto.auth.AuthResponse;
+import com.roadtech.dto.auth.LoginRequest;
+import com.roadtech.dto.auth.RegisterRequest;
+import com.roadtech.entity.MechanicProfile;
+import com.roadtech.entity.PartsProvider;
+import com.roadtech.entity.RefreshToken;
+import com.roadtech.entity.User;
+import com.roadtech.entity.User.UserRole;
+import com.roadtech.exception.BadRequestException;
+import com.roadtech.exception.UnauthorizedException;
+import com.roadtech.repository.MechanicProfileRepository;
+import com.roadtech.repository.PartsProviderRepository;
+import com.roadtech.repository.RefreshTokenRepository;
+import com.roadtech.repository.UserRepository;
+import com.roadtech.security.CustomUserDetails;
+import com.roadtech.security.JwtService;
+
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +42,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final PartsProviderRepository partsProviderRepository;
 
     @Transactional
     public AuthResponse register(RegisterRequest request) {
@@ -65,6 +71,29 @@ public class AuthService {
             mechanicProfileRepository.save(profile);
         }
 
+        // // ✅ PARTS PROVIDER PROFILE
+        if (request.getRole() == UserRole.PARTS_PROVIDER) {
+
+            if (request.getShopName() == null || request.getAddress() == null) {
+                throw new BadRequestException("Shop details are required");
+            }
+
+            PartsProvider provider = PartsProvider.builder()
+                    .user(user)
+                    .shopName(request.getShopName())
+                    .address(request.getAddress())
+                    .latitude(BigDecimal.valueOf(request.getLatitude()))
+                    .longitude(BigDecimal.valueOf(request.getLongitude()))
+                    .phone(request.getPhone())
+                    .openingTime(request.getOpeningTime())
+                    .closingTime(request.getClosingTime())
+                    .isOpen(false)
+                    .isVerified(false)
+                    .build();
+
+            partsProviderRepository.save(provider);
+        }
+        
         return generateAuthResponse(user);
     }
 

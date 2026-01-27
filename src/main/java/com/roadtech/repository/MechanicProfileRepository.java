@@ -17,10 +17,16 @@ public interface MechanicProfileRepository extends JpaRepository<MechanicProfile
 
     List<MechanicProfile> findByIsAvailableTrue();
 
+    // For admin verification
+    List<MechanicProfile> findByIsVerifiedFalse();
+
+    List<MechanicProfile> findByIsVerifiedTrue();
+
     @Query(value = """
         SELECT mp.* FROM mechanic_profiles mp
         JOIN users u ON mp.user_id = u.id
         WHERE mp.is_available = true
+        AND mp.is_verified = true
         AND u.is_active = true
         AND mp.current_latitude IS NOT NULL
         AND mp.current_longitude IS NOT NULL
@@ -40,6 +46,7 @@ public interface MechanicProfileRepository extends JpaRepository<MechanicProfile
         SELECT mp FROM MechanicProfile mp
         JOIN FETCH mp.user u
         WHERE mp.isAvailable = true
+        AND mp.isVerified = true
         AND u.isActive = true
         """)
     List<MechanicProfile> findAllAvailableWithUser();

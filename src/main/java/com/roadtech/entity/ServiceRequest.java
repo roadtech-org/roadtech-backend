@@ -30,7 +30,7 @@ public class ServiceRequest {
     private User mechanic;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "issue_type", nullable = false, length = 50)
+    @Column(name="issue_type", columnDefinition="VARCHAR(255)")
     private IssueType issueType;
 
     @Column(length = 2000)
