@@ -28,16 +28,36 @@ public class AdminService {
 
     @Transactional(readOnly = true)
     public DashboardStatsDto getDashboardStats() {
+
         long totalUsers = userRepository.count();
         long totalCustomers = userRepository.countByRole(UserRole.USER);
         long totalMechanics = mechanicProfileRepository.count();
         long totalProviders = partsProviderRepository.count();
+
         long totalRequests = serviceRequestRepository.count();
-        long pendingRequests = serviceRequestRepository.countByStatus(ServiceRequest.RequestStatus.PENDING);
-        long activeRequests = serviceRequestRepository.countByStatusIn(
-            Arrays.asList(ServiceRequest.RequestStatus.ACCEPTED, ServiceRequest.RequestStatus.IN_PROGRESS)
+        long pendingRequests = serviceRequestRepository.countByStatus(
+                ServiceRequest.RequestStatus.PENDING
         );
-      
+        long activeRequests = serviceRequestRepository.countByStatusIn(
+                Arrays.asList(
+                        ServiceRequest.RequestStatus.ACCEPTED,
+                        ServiceRequest.RequestStatus.IN_PROGRESS
+                )
+        );
+
+        // ✅ COMPLETED TODAY
+        LocalDateTime startOfDay = LocalDateTime.now().toLocalDate().atStartOfDay();
+        LocalDateTime endOfDay = startOfDay.plusDays(1).minusSeconds(1);
+
+        long completedToday = serviceRequestRepository
+                .countByStatusAndCompletedAtBetween(
+                        ServiceRequest.RequestStatus.COMPLETED,
+                        startOfDay,
+                        endOfDay
+                );
+        long availableMechanics = mechanicProfileRepository.countAvailableMechanics();
+
+
         return DashboardStatsDto.builder()
                 .totalUsers(totalUsers)
                 .totalCustomers(totalCustomers)
@@ -46,8 +66,11 @@ public class AdminService {
                 .totalRequests(totalRequests)
                 .pendingRequests(pendingRequests)
                 .activeRequests(activeRequests)
+                .completedToday(completedToday) // 👈 add this
+                .availableMechanics(availableMechanics)
                 .build();
     }
+
 
     @Transactional(readOnly = true)
     public Page<UserManagementDto> getAllUsers(String role, String search, Pageable pageable) {

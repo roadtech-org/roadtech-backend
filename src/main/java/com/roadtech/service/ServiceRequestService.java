@@ -1,5 +1,7 @@
 package com.roadtech.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -31,35 +33,6 @@ public class ServiceRequestService {
     private final NotificationService notificationService;
     private final MechanicProfileRepository mechanicRepo;
     private final TelegramNotificationService telegramService;
-
-//    @Transactional
-//    public ServiceRequestDto createRequest(Long userId, CreateServiceRequestDto dto) {
-//        User user = userRepository.findById(userId)
-//                .orElseThrow(() -> new ResourceNotFoundException("User", userId));
-//
-//        // Check if user already has an active request
-//        serviceRequestRepository.findActiveRequestByUserId(userId)
-//                .ifPresent(r -> {
-//                    throw new BadRequestException("You already have an active service request");
-//                });
-//
-//        ServiceRequest request = ServiceRequest.builder()
-//                .user(user)
-//                .issueType(dto.getIssueType())
-//                .description(dto.getDescription())
-//                .latitude(dto.getLatitude())
-//                .longitude(dto.getLongitude())
-//                .address(dto.getAddress())
-//                .status(RequestStatus.PENDING)
-//                .build();
-//
-//        request = serviceRequestRepository.save(request);
-//
-//        // Notify available mechanics about new request
-//        notificationService.notifyNewRequest(request);
-//
-//        return ServiceRequestDto.fromEntity(request);
-//    }
     @Transactional
     public ServiceRequestDto createRequest(Long userId, CreateServiceRequestDto dto) {
 
@@ -174,5 +147,20 @@ public class ServiceRequestService {
 
         return ServiceRequestDto.fromEntity(request);
     }
+    
+    
+    public long getTodayCompletedRequests() {
+        LocalDate today = LocalDate.now();
+
+        LocalDateTime startOfDay = today.atStartOfDay();
+        LocalDateTime endOfDay = today.atTime(23, 59, 59);
+
+        return serviceRequestRepository.countByStatusAndCompletedAtBetween(
+                RequestStatus.COMPLETED,
+                startOfDay,
+                endOfDay
+        );
+    }
+
     
 }
