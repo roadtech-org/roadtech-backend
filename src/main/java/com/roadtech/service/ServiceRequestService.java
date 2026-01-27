@@ -95,6 +95,9 @@ public class ServiceRequestService {
             User mechanicUser = mechanic.getUser();
 
             if (mechanicUser.getTelegramChatId() != null) {
+            	String mapsLink = "https://www.google.com/maps/dir/?api=1&destination=%f,%f,"
+            	        .formatted(request.getLatitude(), request.getLongitude());
+            	
 
                 String msg = """
                 🚨 New Service Request
@@ -106,7 +109,7 @@ public class ServiceRequestService {
                 Open RoadTech app to accept
                 """.formatted(
                     request.getIssueType(),
-                    request.getAddress(),
+                    mapsLink,
                     request.getId()
                 );
 
