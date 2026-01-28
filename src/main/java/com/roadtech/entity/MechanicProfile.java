@@ -37,7 +37,7 @@ public class MechanicProfile {
     @Column(name = "is_verified")
     @Builder.Default
     private Boolean isVerified = false;
-
+    
     @Column(name = "current_latitude", precision = 10, scale = 8)
     private BigDecimal currentLatitude;
 

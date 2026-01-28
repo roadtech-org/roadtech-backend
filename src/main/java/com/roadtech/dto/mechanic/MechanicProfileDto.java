@@ -24,6 +24,7 @@ public class MechanicProfileDto {
     private String phone;
     private List<String> specializations;
     private Boolean isAvailable;
+    private Boolean isVerified;
     private BigDecimal currentLatitude;
     private BigDecimal currentLongitude;
     private BigDecimal rating;
@@ -40,6 +41,7 @@ public class MechanicProfileDto {
                 .phone(user.getPhone())
                 .specializations(profile.getSpecializations())
                 .isAvailable(profile.getIsAvailable())
+                .isVerified(profile.getIsVerified())
                 .currentLatitude(profile.getCurrentLatitude())
                 .currentLongitude(profile.getCurrentLongitude())
                 .rating(profile.getRating())
