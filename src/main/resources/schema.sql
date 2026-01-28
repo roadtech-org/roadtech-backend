@@ -1,4 +1,4 @@
--- RoadTech Database Schema (Updated)
+-- RoadTech Database Schema 
 
 -- Users table (users, mechanics, parts providers, admin)
 CREATE TABLE IF NOT EXISTS users (
@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS users (
     role ENUM('USER', 'MECHANIC', 'PARTS_PROVIDER', 'ADMIN') NOT NULL,
     is_active BOOLEAN DEFAULT TRUE,
     is_verified BOOLEAN DEFAULT FALSE,
+    telegram_chat_id BIGINT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_users_email (email),
@@ -36,6 +37,8 @@ CREATE TABLE IF NOT EXISTS mechanic_profiles (
     INDEX idx_mechanic_verified (is_verified),
     INDEX idx_mechanic_location (current_latitude, current_longitude)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
 
 -- Parts providers table
 CREATE TABLE IF NOT EXISTS parts_providers (
@@ -133,6 +136,7 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
     INDEX idx_refresh_token (token),
     INDEX idx_refresh_user (user_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 -- Insert default admin user (password: Admin@123)
 INSERT INTO users (email, password, full_name, phone, role, is_active, is_verified)
